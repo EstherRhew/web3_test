@@ -11,6 +11,12 @@
 # production
 /build
 
+# env
+.env
+
+/src/infura_token
+/src/private_key
+
 # misc
 .DS_Store
 .env.local
