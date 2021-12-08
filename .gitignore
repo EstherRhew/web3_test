@@ -14,8 +14,8 @@
 # env
 .env
 
-/src/infura_token
-/src/private_key
+/src/test1/infura_token
+/src/test1/private_key
 
 # misc
 .DS_Store
