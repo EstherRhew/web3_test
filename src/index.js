@@ -2,22 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-//import { Web3ReactProvider } from "@web3-react/core"
-//import getLibrary from './library';
-import detectEthereumProvider from '@metamask/detect-provider';
+import Metamask from './wallet/metamask';
 
-// const getProvider = async () => {
-//   const provider = await detectEthereumProvider();
-//   return provider;
-// }
-
+const metamask = new Metamask();
 
 ReactDOM.render(
   <React.StrictMode>
-    {/* <Web3ReactProvider getLibrary={getLibrary}> */}
-    <App />
-    {/* </Web3ReactProvider> */}
-
+    <App metamask={metamask} />
   </React.StrictMode>,
   document.getElementById('root')
 );

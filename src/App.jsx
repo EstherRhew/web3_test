@@ -6,62 +6,74 @@ import './App.css';
 import { useEffect, useState } from 'react';
 import Web3 from 'web3';
 
-function App({ }) {
-  const [currentAccount, setCurrentAccount] = useState(null);
+const web3 = new Web3();
 
-  // const handleAccountsChanged = (accounts) => {
-  //   if (accounts.length === 0) {
-  //     console.log('Please connect to MetaMask');
-  //   } else if (accounts[0] !== currentAccount) {
-  //     setCurrentAccount(accounts[0]);
-  //     console.log('account changed!', currentAccount, accounts[0])
-  //   }
-  // }
+function App({ metamask }) {
+  const [account, setAccount] = useState();
+  const [input, setInput] = useState({
+    to: '',
+    value: '',
+    gasPrice: '',
+    gasLimit: '',
+  })
+  const onConnect = async () => {
+    const address = await metamask.connectWallet();
+    setAccount(address);
+  }
 
-  const connect = async () => {
-    const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
-    const account = accounts[0]
-    console.log(account)
-    // .then(handleAccountsChanged)
-    // .catch((err) => {
-    //   if (err.code === 4001) {
-    //     console.log('Please connect to MetaMask');
-    //   } else {
-    //     console.error(err);
-    //   }
-    // })
+  const onSend = () => {
+    metamask.sendTransaction(input)
+  }
+
+  const onChangeInput = (e) => {
+    const value = (val) => {
+      if (e.target.name === 'to') {
+        return val
+      }
+
+      val = val == 0 ? 0 : val * 1000000000000000000
+      val = Math.round(val)
+      return '0x' + val.toString(16)
+    }
+    setInput({
+      ...input,
+      [e.target.name]: value(e.target.value)
+    })
+
   }
 
   useEffect(() => {
-    console.log(Web3)
     if (typeof window.ethereum !== 'undefined') {
-      console.log('he')
+      console.log('Metamask available')
     }
   }, [])
-
-
-  // useEffect(() => {
-  //   getProvider()
-  //     .then((provider) => {
-  //       if (!provider) {
-  //         console.log('Please Install MetaMask!')
-  //         return;
-  //       } else if (provider !== window.ethereum) {
-  //         console.log(provider)
-  //         console.error('Do you have multiple wallets installed??');
-  //       } else {
-  //         console.log(provider)
-  //         return;
-  //       }
-  //     })
-  // }, [getProvider])
 
   return (
     <div className="App">
       <div>
-        <button onClick={connect}>Connect</button>
-      </div>
+        <button onClick={onConnect}>Connect</button>
+        <p>Account : {account}</p>
 
+      </div>
+      <div className="transaction">
+        <button onClick={onSend}>Send Ether</button>
+        <div className="input_box">
+          <label htmlFor="to">to : </label>
+          <input type="text" id="to" name="to" onChange={onChangeInput} />
+        </div>
+        <div className="input_box">
+          <label htmlFor="value">value : </label>
+          <input type="text" id="value" name="value" onChange={onChangeInput} />
+        </div>
+        <div className="input_box">
+          <label htmlFor="gasPrice">gas price : </label>
+          <input type="text" id="gasPrice" name="gasPrice" onChange={onChangeInput} />
+        </div>
+        <div className="input_box">
+          <label htmlFor="gasLimit">gas limit : </label>
+          <input type="text" id="gasLimit" name="gasLimit" onChange={onChangeInput} />
+        </div>
+      </div>
     </div>
   );
 }
