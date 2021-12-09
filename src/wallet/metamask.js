@@ -2,10 +2,11 @@ class Metamask {
 
   async getAccount() {
     let account = await window.ethereum.selectedAddress
-    if (account == null) {
-      account = await this.connectWallet();
-      return account;
-    }
+    // if (account == null) {
+    //   account = await this.connectWallet();
+    //   return account;
+    // }
+    console.log(account)
     return account;
   }
 
@@ -23,7 +24,6 @@ class Metamask {
       from: account,
       value: input.value,
       gasPrice: input.gasPrice,
-      gasLimit: input.gasLimit,
 
     }
     console.log(transactionParam)
