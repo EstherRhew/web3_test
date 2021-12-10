@@ -19,14 +19,20 @@ function App({ metamask }) {
 
   const onConnect = async () => {
     setLoading(true)
-    const _account = await getAccount();
+    const _account = await metamask.connectWallet();
     setLoading(false)
     setAccount(_account);
 
   }
 
-  const onSend = () => {
-    metamask.sendTransaction(input)
+  const onSend = async () => {
+    const validty = await metamask.checkAddress(input.to)
+    if (validty == false) {
+      alert('The address is not valid. Please check again')
+      return;
+    }
+    metamask.sendTransaction(input);
+    alert('Transaction successfully made!')
   }
 
   const onChangeInput = (e) => {
@@ -48,7 +54,7 @@ function App({ metamask }) {
 
   const getAccount = async () => {
     const account = await metamask.getAccount();
-    return account;
+    setAccount(account)
   }
 
   useEffect(() => {
@@ -56,6 +62,7 @@ function App({ metamask }) {
       console.log('Metamask available')
     }
     getAccount()
+    metamask.getWallet();
   })
 
   return (
