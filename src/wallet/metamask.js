@@ -62,6 +62,10 @@ class Metamask {
       console.log(err)
     }
   }
+
+  async onAccountChange(cb) {
+    window.ethereum.on('accountsChanged', cb())
+  }
 }
 
 export default Metamask;
